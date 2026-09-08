@@ -1,0 +1,1648 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Global Compound Interest Calculator & Investment Simulator</title>
+  <meta name="description" content="Advanced Global Compound Interest Calculator & Investment Simulator. Calculate lump-sum and recurring DCA investment growth with 20 languages, interactive dynamic charts, and CSV export.">
+  <meta name="keywords" content="compound interest calculator, investment simulator, DCA calculator, savings growth, financial planner, wealth projection">
+  <meta name="author" content="Global Finance Tools">
+  <meta name="theme-color" content="#0f172a">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta property="og:title" content="Global Compound Interest Calculator & Investment Simulator">
+  <meta property="og:description" content="Calculate and visualize compound interest and DCA growth with real-time charts and 20-language support.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://compound-calculator.app">
+  <meta property="og:image" content="/public/icon.svg">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="manifest" href="/public/manifest.json">
+  <link rel="icon" type="image/svg+xml" href="/public/icon.svg">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Global Compound Interest Calculator & Investment Simulator",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "All",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "description": "Zero-build high precision compound interest simulator with lump-sum and DCA modes."
+  }
+  </script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: { 50: '#ecfdf5', 500: '#10b981', 600: '#059669', 700: '#047857' },
+            navy: { 800: '#0f172a', 900: '#020617', 950: '#090d16' }
+          }
+        }
+      }
+    }
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      height: 18px; width: 18px; border-radius: 9999px;
+      background: #10b981; cursor: pointer;
+      box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+    }
+    .custom-scroll::-webkit-scrollbar { height: 6px; width: 6px; }
+    .custom-scroll::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.25); border-radius: 9999px; }
+  </style>
+</head>
+<body class="min-h-screen bg-slate-950 text-slate-100 transition-colors duration-200 antialiased selection:bg-emerald-500 selection:text-white pb-12">
+
+  <!-- TOP NAVIGATION BAR -->
+  <header class="border-b border-slate-800/80 bg-slate-900/70 backdrop-blur-md sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-2 sm:gap-4">
+      <!-- Brand -->
+      <div class="flex items-center gap-3 min-w-max">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-400 flex items-center justify-center shadow-lg shadow-emerald-950/40 text-white font-bold text-lg">
+          📈
+        </div>
+        <div>
+          <h1 class="text-sm sm:text-base font-bold text-white tracking-tight flex items-center gap-1.5">
+            <span id="txt-app-title">Compound Calculator</span>
+            <span class="text-[10px] uppercase font-mono px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-semibold">Pro</span>
+          </h1>
+          <p id="txt-app-sub" class="text-[11px] text-slate-400 hidden sm:block">Global Investment & DCA Simulator</p>
+        </div>
+      </div>
+
+      <!-- Controls Right -->
+      <div class="flex items-center gap-1.5 sm:gap-2">
+        <!-- 20-Language Selector (Rule 1) -->
+        <div class="relative">
+          <select id="sel-lang" class="bg-slate-800 text-slate-200 border border-slate-700 hover:border-slate-600 text-xs rounded-lg px-2.5 py-1.5 cursor-pointer focus:outline-none focus:ring-1 focus:ring-emerald-500 font-medium transition-all" aria-label="Language selector">
+            <option value="en">🇬🇧 English</option>
+            <option value="ko">🇰🇷 한국어</option>
+            <option value="ja">🇯🇵 日本語</option>
+            <option value="zh">🇨🇳 简体中文</option>
+            <option value="es">🇪🇸 Español</option>
+            <option value="fr">🇫🇷 Français</option>
+            <option value="de">🇩🇪 Deutsch</option>
+            <option value="pt">🇵🇹 Português</option>
+            <option value="ru">🇷🇺 Русский</option>
+            <option value="it">🇮🇹 Italiano</option>
+            <option value="vi">🇻🇳 Tiếng Việt</option>
+            <option value="th">🇹🇭 ไทย</option>
+            <option value="id">🇮🇩 Bahasa ID</option>
+            <option value="tr">🇹🇷 Türkçe</option>
+            <option value="pl">🇵🇱 Polski</option>
+            <option value="nl">🇳🇱 Nederlands</option>
+            <option value="ar">🇸🇦 العربية</option>
+            <option value="hi">🇮🇳 हिन्दी</option>
+            <option value="sv">🇸🇪 Svenska</option>
+            <option value="uk">🇺🇦 Українська</option>
+          </select>
+        </div>
+
+        <!-- Currency Selector -->
+        <select id="sel-curr" class="bg-slate-800 text-slate-200 border border-slate-700 hover:border-slate-600 text-xs rounded-lg px-2 py-1.5 cursor-pointer focus:outline-none focus:ring-1 focus:ring-emerald-500 font-mono font-medium" aria-label="Currency selector">
+          <option value="USD">USD ($)</option>
+          <option value="EUR">EUR (€)</option>
+          <option value="GBP">GBP (£)</option>
+          <option value="JPY">JPY (¥)</option>
+          <option value="KRW">KRW (₩)</option>
+          <option value="CNY">CNY (¥)</option>
+          <option value="INR">INR (₹)</option>
+          <option value="CAD">CAD (C$)</option>
+          <option value="AUD">AUD (A$)</option>
+          <option value="CHF">CHF (Fr)</option>
+          <option value="BRL">BRL (R$)</option>
+          <option value="SEK">SEK (kr)</option>
+          <option value="TRY">TRY (₺)</option>
+        </select>
+
+        <!-- Theme Selector (Rule 7) -->
+        <select id="sel-theme" class="bg-slate-800 text-slate-200 border border-slate-700 hover:border-slate-600 text-xs rounded-lg px-2 py-1.5 cursor-pointer focus:outline-none focus:ring-1 focus:ring-emerald-500 hidden sm:block" aria-label="Theme selector">
+          <option value="dark">🌙 Dark (Slate)</option>
+          <option value="emerald">🟢 Terminal Emerald</option>
+          <option value="navy">🔵 Bloomberg Navy</option>
+          <option value="gold">🟡 Prestige Gold</option>
+          <option value="light">☀️ Clean Light</option>
+        </select>
+
+        <!-- Share URL Button (Rule 12) -->
+        <button id="btn-share-link" class="p-1.5 sm:px-2.5 sm:py-1.5 rounded-lg bg-emerald-600/20 text-emerald-400 hover:bg-emerald-600/30 border border-emerald-500/30 text-xs font-semibold flex items-center gap-1.5 transition-all" title="Copy shareable simulation link">
+          <span>🔗</span>
+          <span class="hidden md:inline" id="txt-share-btn">Share</span>
+        </button>
+
+        <!-- Shortcuts Help Modal Button (Rule 8) -->
+        <button id="btn-open-shortcuts" class="p-1.5 sm:px-2 sm:py-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white border border-slate-700 hover:border-slate-600 text-xs font-mono transition-all" title="Keyboard Shortcuts (?)">
+          ⌨️
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- QUICK PRESETS RIBBON (Rule 15) -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 pt-4 pb-2">
+    <div class="flex items-center gap-2 overflow-x-auto pb-2 custom-scroll text-xs no-scrollbar">
+      <span class="text-slate-400 font-medium whitespace-nowrap text-[11px] uppercase tracking-wider flex items-center gap-1">
+        ⚡ <span id="txt-presets-label">Presets:</span>
+      </span>
+      <button class="preset-pill px-2.5 py-1 rounded-full bg-slate-800 hover:bg-emerald-600/20 text-slate-300 hover:text-emerald-400 border border-slate-700 hover:border-emerald-500/40 whitespace-nowrap transition-all" data-preset="sp500">
+        🚀 S&amp;P 500 DCA ($500/mo, 10%)
+      </button>
+      <button class="preset-pill px-2.5 py-1 rounded-full bg-slate-800 hover:bg-emerald-600/20 text-slate-300 hover:text-emerald-400 border border-slate-700 hover:border-emerald-500/40 whitespace-nowrap transition-all" data-preset="retirement">
+        🏖️ Retirement 401(k) ($800/mo, 8%)
+      </button>
+      <button class="preset-pill px-2.5 py-1 rounded-full bg-slate-800 hover:bg-emerald-600/20 text-slate-300 hover:text-emerald-400 border border-slate-700 hover:border-emerald-500/40 whitespace-nowrap transition-all" data-preset="college">
+        🎓 College Fund ($250/mo, 7%)
+      </button>
+      <button class="preset-pill px-2.5 py-1 rounded-full bg-slate-800 hover:bg-emerald-600/20 text-slate-300 hover:text-emerald-400 border border-slate-700 hover:border-emerald-500/40 whitespace-nowrap transition-all" data-preset="hysa">
+        🏦 High-Yield Savings (4.5%)
+      </button>
+      <button class="preset-pill px-2.5 py-1 rounded-full bg-slate-800 hover:bg-emerald-600/20 text-slate-300 hover:text-emerald-400 border border-slate-700 hover:border-emerald-500/40 whitespace-nowrap transition-all" data-preset="lumpsum">
+        💎 Lump-Sum 20-Yr ($50k, 9%)
+      </button>
+      <button id="btn-open-json-modal" class="px-2.5 py-1 rounded-full bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-slate-200 border border-dashed border-slate-700 whitespace-nowrap text-[11px] transition-all ml-auto">
+        📂 JSON Import/Export
+      </button>
+    </div>
+  </section>
+
+  <!-- MAIN WORKSPACE -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 py-4 grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+    <!-- LEFT COLUMN: INPUT CONTROLS (Rule 2 & 9) -->
+    <div class="lg:col-span-5 space-y-5">
+      <div class="bg-slate-900/90 rounded-2xl border border-slate-800 p-5 sm:p-6 shadow-xl shadow-slate-950/50 space-y-5">
+        
+        <!-- Calculation Mode Switcher (Basic vs Recurring) -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2" id="txt-calc-mode">
+            Calculation Mode
+          </label>
+          <div class="grid grid-cols-2 gap-1.5 p-1 rounded-xl bg-slate-950 border border-slate-800">
+            <button id="mode-recurring" type="button" class="mode-btn py-2 text-xs font-bold rounded-lg bg-emerald-600 text-white shadow-md transition-all flex items-center justify-center gap-1.5">
+              <span>🔄</span> <span id="txt-mode-recurring">Recurring (DCA)</span>
+            </button>
+            <button id="mode-basic" type="button" class="mode-btn py-2 text-xs font-medium rounded-lg text-slate-400 hover:text-white transition-all flex items-center justify-center gap-1.5">
+              <span>💰</span> <span id="txt-mode-basic">Basic (Lump-sum)</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Initial Principal ($) -->
+        <div class="space-y-2">
+          <div class="flex justify-between items-center text-xs">
+            <label for="inp-principal" class="font-semibold text-slate-200" id="txt-initial-principal">Initial Principal</label>
+            <span class="font-mono text-emerald-400 font-semibold" id="val-principal-display">$10,000</span>
+          </div>
+          <div class="relative">
+            <span class="absolute left-3 top-2.5 text-slate-500 font-mono text-sm curr-symbol">$</span>
+            <input type="number" id="inp-principal" min="0" max="100000000" step="500" value="10000"
+              class="w-full bg-slate-950 border border-slate-700/80 rounded-xl pl-8 pr-3 py-2 text-slate-100 font-mono text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 transition-all">
+          </div>
+          <input type="range" id="rng-principal" min="0" max="250000" step="1000" value="10000"
+            class="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer">
+          <div class="flex gap-1.5 pt-1">
+            <button class="add-val-btn text-[11px] px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300" data-target="inp-principal" data-add="1000">+1K</button>
+            <button class="add-val-btn text-[11px] px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300" data-target="inp-principal" data-add="5000">+5K</button>
+            <button class="add-val-btn text-[11px] px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300" data-target="inp-principal" data-add="10000">+10K</button>
+            <button class="add-val-btn text-[11px] px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300" data-target="inp-principal" data-add="50000">+50K</button>
+          </div>
+        </div>
+
+        <!-- Periodic Contribution ($) (Hidden in Basic mode) -->
+        <div id="grp-contribution" class="space-y-2 transition-all">
+          <div class="flex justify-between items-center text-xs">
+            <label for="inp-deposit" class="font-semibold text-slate-200" id="txt-periodic-contrib">Periodic Contribution</label>
+            <span class="font-mono text-emerald-400 font-semibold" id="val-deposit-display">$500 / mo</span>
+          </div>
+          <div class="relative">
+            <span class="absolute left-3 top-2.5 text-slate-500 font-mono text-sm curr-symbol">$</span>
+            <input type="number" id="inp-deposit" min="0" max="1000000" step="50" value="500"
+              class="w-full bg-slate-950 border border-slate-700/80 rounded-xl pl-8 pr-3 py-2 text-slate-100 font-mono text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 transition-all">
+          </div>
+          <input type="range" id="rng-deposit" min="0" max="10000" step="50" value="500"
+            class="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer">
+
+          <!-- Deposit Frequency & Timing Grid -->
+          <div class="grid grid-cols-2 gap-2 pt-1">
+            <div>
+              <label for="sel-deposit-freq" class="block text-[11px] text-slate-400 mb-1" id="txt-deposit-freq">Deposit Frequency</label>
+              <select id="sel-deposit-freq" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-slate-200 font-medium focus:outline-none focus:ring-1 focus:ring-emerald-500">
+                <option value="12" selected>Monthly</option>
+                <option value="26">Bi-Weekly</option>
+                <option value="52">Weekly</option>
+                <option value="4">Quarterly</option>
+                <option value="1">Annually</option>
+                <option value="365">Daily</option>
+              </select>
+            </div>
+            <div>
+              <label for="sel-deposit-timing" class="block text-[11px] text-slate-400 mb-1" id="txt-deposit-timing">Deposit Timing</label>
+              <select id="sel-deposit-timing" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-slate-200 font-medium focus:outline-none focus:ring-1 focus:ring-emerald-500">
+                <option value="end" selected>End of Period</option>
+                <option value="beginning">Beginning of Period</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Annual Return Rate (%) -->
+        <div class="space-y-2">
+          <div class="flex justify-between items-center text-xs">
+            <label for="inp-rate" class="font-semibold text-slate-200" id="txt-interest-rate">Estimated Annual Return</label>
+            <span class="font-mono text-emerald-400 font-semibold" id="val-rate-display">8.00%</span>
+          </div>
+          <div class="relative">
+            <input type="number" id="inp-rate" min="0" max="100" step="0.1" value="8.0"
+              class="w-full bg-slate-950 border border-slate-700/80 rounded-xl px-3 py-2 text-slate-100 font-mono text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 transition-all">
+            <span class="absolute right-3 top-2.5 text-slate-500 font-mono text-sm">%</span>
+          </div>
+          <input type="range" id="rng-rate" min="0" max="25" step="0.1" value="8.0"
+            class="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer">
+          <div class="flex gap-1.5 pt-1">
+            <button class="set-rate-btn text-[11px] px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300" data-rate="4.5">4.5% (HYSA)</button>
+            <button class="set-rate-btn text-[11px] px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300" data-rate="7.0">7.0% (Real)</button>
+            <button class="set-rate-btn text-[11px] px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300" data-rate="10.0">10.0% (S&amp;P)</button>
+            <button class="set-rate-btn text-[11px] px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300" data-rate="12.0">12.0% (Growth)</button>
+          </div>
+        </div>
+
+        <!-- Investment Horizon (Years) -->
+        <div class="space-y-2">
+          <div class="flex justify-between items-center text-xs">
+            <label for="inp-years" class="font-semibold text-slate-200" id="txt-investment-horizon">Investment Horizon</label>
+            <span class="font-mono text-emerald-400 font-semibold" id="val-years-display">20 Years</span>
+          </div>
+          <div class="relative">
+            <input type="number" id="inp-years" min="1" max="60" step="1" value="20"
+              class="w-full bg-slate-950 border border-slate-700/80 rounded-xl px-3 py-2 text-slate-100 font-mono text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 transition-all">
+            <span class="absolute right-3 top-2.5 text-slate-500 font-mono text-xs" id="txt-years-unit">Years</span>
+          </div>
+          <input type="range" id="rng-years" min="1" max="50" step="1" value="20"
+            class="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer">
+          <div class="flex gap-1.5 pt-1">
+            <button class="set-years-btn text-[11px] px-2.5 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300" data-years="5">5y</button>
+            <button class="set-years-btn text-[11px] px-2.5 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300" data-years="10">10y</button>
+            <button class="set-years-btn text-[11px] px-2.5 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300" data-years="20">20y</button>
+            <button class="set-years-btn text-[11px] px-2.5 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300" data-years="30">30y</button>
+            <button class="set-years-btn text-[11px] px-2.5 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300" data-years="40">40y</button>
+          </div>
+        </div>
+
+        <!-- Compounding Frequency -->
+        <div>
+          <label for="sel-compound-freq" class="block text-xs font-semibold text-slate-200 mb-1.5" id="txt-compound-freq">Compound Frequency</label>
+          <select id="sel-compound-freq" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200 font-medium focus:outline-none focus:ring-1 focus:ring-emerald-500">
+            <option value="12" selected>Monthly (Standard for most accounts)</option>
+            <option value="365">Daily (Common in HYSA &amp; Money Market)</option>
+            <option value="4">Quarterly</option>
+            <option value="2">Semi-Annually</option>
+            <option value="1">Annually</option>
+          </select>
+        </div>
+
+        <!-- Action Buttons (Calculate / Reset) -->
+        <div class="flex gap-2 pt-2">
+          <button id="btn-recalculate" type="button" class="flex-1 py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs uppercase tracking-wider shadow-lg shadow-emerald-950/40 transition-all flex items-center justify-center gap-2">
+            <span>⚡</span> <span id="txt-btn-calc">Recalculate</span>
+            <kbd class="hidden sm:inline font-mono text-[10px] px-1.5 py-0.5 rounded bg-emerald-700 text-emerald-100">Enter</kbd>
+          </button>
+          <button id="btn-reset" type="button" class="py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs transition-all flex items-center gap-1.5" title="Reset to defaults (R)">
+            <span>↺</span> <span id="txt-btn-reset">Reset</span>
+            <kbd class="hidden sm:inline font-mono text-[10px] px-1 rounded bg-slate-900 text-slate-400">R</kbd>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT COLUMN: RESULTS, CHARTS & BREAKDOWN (Rule 13) -->
+    <div class="lg:col-span-7 space-y-6">
+
+      <!-- 4 High-Contrast KPI Cards -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <!-- Card 1: Total Future Value -->
+        <div class="bg-slate-900/90 border border-emerald-500/30 rounded-2xl p-4 shadow-lg shadow-emerald-950/20 relative overflow-hidden">
+          <div class="text-[11px] font-semibold text-slate-400 uppercase tracking-wide truncate" id="txt-kpi-future">Future Balance</div>
+          <div class="text-lg sm:text-xl font-extrabold text-white font-mono mt-1 text-emerald-400 truncate" id="kpi-future-val">$326,712</div>
+          <div class="text-[10px] font-mono text-emerald-400 mt-1 font-semibold flex items-center gap-1">
+            <span>🚀</span> <span id="kpi-future-mult">2.51x Initial</span>
+          </div>
+          <div class="absolute -right-2 -bottom-2 w-12 h-12 bg-emerald-500/10 rounded-full blur-lg pointer-events-none"></div>
+        </div>
+
+        <!-- Card 2: Total Principal Invested -->
+        <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 shadow-md">
+          <div class="text-[11px] font-semibold text-slate-400 uppercase tracking-wide truncate" id="txt-kpi-principal">Total Invested</div>
+          <div class="text-lg sm:text-xl font-bold text-slate-100 font-mono mt-1 truncate" id="kpi-principal-val">$130,000</div>
+          <div class="text-[10px] text-slate-400 mt-1" id="kpi-principal-pct">39.8% of Total</div>
+        </div>
+
+        <!-- Card 3: Total Interest Earned -->
+        <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 shadow-md">
+          <div class="text-[11px] font-semibold text-slate-400 uppercase tracking-wide truncate" id="txt-kpi-interest">Total Interest</div>
+          <div class="text-lg sm:text-xl font-bold text-teal-300 font-mono mt-1 truncate" id="kpi-interest-val">$196,712</div>
+          <div class="text-[10px] text-teal-400 mt-1 font-semibold" id="kpi-interest-pct">60.2% of Total</div>
+        </div>
+
+        <!-- Card 4: Net ROI -->
+        <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 shadow-md">
+          <div class="text-[11px] font-semibold text-slate-400 uppercase tracking-wide truncate" id="txt-kpi-roi">Total Return ROI</div>
+          <div class="text-lg sm:text-xl font-bold text-amber-300 font-mono mt-1 truncate" id="kpi-roi-val">+151.3%</div>
+          <div class="text-[10px] text-slate-400 mt-1" id="txt-kpi-growth">Compound Gain</div>
+        </div>
+      </div>
+
+      <!-- INFLATION PURCHASING POWER ACCORDION -->
+      <div class="bg-slate-900/70 border border-slate-800 rounded-xl p-3 flex flex-wrap items-center justify-between gap-2 text-xs">
+        <div class="flex items-center gap-2">
+          <span class="text-base">⚖️</span>
+          <div>
+            <span class="font-semibold text-slate-200" id="txt-infl-title">Inflation Adjusted Purchasing Power</span>
+            <span class="text-slate-400 text-[11px] ml-1">(2.5% inflation estimate):</span>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <span class="font-mono font-bold text-slate-200 text-sm" id="val-infl-adjusted">$199,380</span>
+          <span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 font-mono" id="val-infl-loss">-39% Purchasing Power</span>
+        </div>
+      </div>
+
+      <!-- DYNAMIC GROWTH GRAPH (Chart.js) -->
+      <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <div>
+            <h2 class="text-sm font-bold text-slate-100 flex items-center gap-2">
+              <span id="txt-chart-heading">Growth Projection Graph</span>
+            </h2>
+            <p class="text-[11px] text-slate-400" id="txt-chart-sub">Annual visual trajectory of deposits vs compound interest</p>
+          </div>
+          <!-- Chart Mode Switcher -->
+          <div class="flex items-center gap-1 bg-slate-950 p-1 rounded-lg border border-slate-800 text-xs">
+            <button id="chart-type-stacked" class="px-2.5 py-1 rounded font-medium bg-emerald-600 text-white text-[11px] transition-all">Stacked</button>
+            <button id="chart-type-line" class="px-2.5 py-1 rounded font-medium text-slate-400 hover:text-white text-[11px] transition-all">Line</button>
+          </div>
+        </div>
+
+        <!-- Canvas Container -->
+        <div class="relative w-full h-[280px] sm:h-[320px]">
+          <canvas id="growthChart"></canvas>
+        </div>
+      </div>
+
+      <!-- BREAKDOWN TABLE SECTION (Rule 4 & 13) -->
+      <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h2 class="text-sm font-bold text-slate-100 flex items-center gap-2">
+              <span id="txt-table-heading">Annual Breakdown Schedule</span>
+            </h2>
+            <p class="text-[11px] text-slate-400" id="txt-table-sub">Detailed year-by-year financial accounting</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <!-- Copy Summary (Rule 4) -->
+            <button id="btn-copy-summary" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-medium flex items-center gap-1.5 transition-all" title="Copy summary to clipboard (C)">
+              <span>📋</span> <span id="txt-btn-copy">Copy</span>
+            </button>
+            <!-- Export CSV (Rule 4) -->
+            <button id="btn-export-csv" class="px-3 py-1.5 rounded-lg bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 border border-emerald-500/30 text-xs font-semibold flex items-center gap-1.5 transition-all" title="Download CSV breakdown (E)">
+              <span>📥</span> <span id="txt-btn-csv">Export CSV</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Table Container -->
+        <div class="overflow-x-auto max-h-[360px] custom-scroll border border-slate-800 rounded-xl">
+          <table class="w-full text-left text-xs border-collapse font-mono" id="breakdown-table">
+            <thead class="bg-slate-950 text-slate-400 sticky top-0 border-b border-slate-800 uppercase tracking-wider text-[10px]">
+              <tr>
+                <th class="py-2.5 px-3 font-semibold" id="th-year">Year</th>
+                <th class="py-2.5 px-3 font-semibold text-right" id="th-start">Starting</th>
+                <th class="py-2.5 px-3 font-semibold text-right" id="th-deposit">Deposits</th>
+                <th class="py-2.5 px-3 font-semibold text-right" id="th-interest">Interest Earned</th>
+                <th class="py-2.5 px-3 font-semibold text-right" id="th-total-interest">Total Interest</th>
+                <th class="py-2.5 px-3 font-semibold text-right" id="th-end">Ending Balance</th>
+              </tr>
+            </thead>
+            <tbody id="table-body" class="divide-y divide-slate-800/60 text-slate-300">
+              <!-- Rendered dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- AD SLOT READY PLACEHOLDER (Rule 17) -->
+  <!-- AD SLOT -->
+  <section class="max-w-5xl mx-auto px-4 my-8">
+    <div class="w-full min-h-[90px] p-3 rounded-xl border border-dashed border-slate-800 bg-slate-900/30 flex flex-col items-center justify-center text-xs text-slate-500 transition-all text-center">
+      <span class="font-mono uppercase tracking-widest text-[10px] text-slate-600 font-semibold mb-1">Sponsored Advertisement</span>
+      <span class="text-[11px] text-slate-500">Ad Space Reserved (728x90 Leaderboard / Responsive Display Unit)</span>
+    </div>
+  </section>
+
+  <!-- FOOTER (Rule 14) -->
+  <footer class="max-w-7xl mx-auto px-4 sm:px-6 pt-6 border-t border-slate-800/80 text-xs text-slate-500 space-y-4">
+    <div class="flex flex-wrap items-center justify-between gap-4">
+      <div>
+        <p class="font-semibold text-slate-400">Global Compound Interest Calculator &amp; Investment Simulator</p>
+        <p class="text-[11px] text-slate-500 mt-0.5" id="txt-disclaimer">For educational and illustrative purposes only. Not certified financial advice.</p>
+      </div>
+      <div class="flex items-center gap-4 text-xs font-medium">
+        <button id="btn-open-feedback" class="hover:text-emerald-400 transition-colors">💬 Feedback &amp; Support</button>
+        <button id="btn-open-formula" class="hover:text-emerald-400 transition-colors">📐 Financial Formulas</button>
+        <button id="btn-footer-shortcuts" class="hover:text-emerald-400 transition-colors">⌨️ Shortcuts</button>
+      </div>
+    </div>
+    <div class="flex items-center justify-between text-[11px] text-slate-600 pt-2 border-t border-slate-900">
+      <span>Zero-Build Pure Architecture | 100% Client-Side Privacy</span>
+      <span>v2.5 Pro Edition</span>
+    </div>
+  </footer>
+
+  <!-- TOAST NOTIFICATION CONTAINER (Rule 16) -->
+  <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none" aria-live="polite"></div>
+
+  <!-- MODAL 1: KEYBOARD SHORTCUTS (Rule 8) -->
+  <div id="modal-shortcuts" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between">
+        <h3 class="text-base font-bold text-white flex items-center gap-2">⌨️ Keyboard Shortcuts</h3>
+        <button class="modal-close text-slate-400 hover:text-white p-1 text-lg font-mono">&times;</button>
+      </div>
+      <div class="divide-y divide-slate-800 text-xs text-slate-300">
+        <div class="py-2.5 flex justify-between items-center">
+          <span>Recalculate Simulation</span>
+          <kbd class="font-mono bg-slate-800 border border-slate-700 px-2 py-1 rounded text-emerald-400">Enter</kbd>
+        </div>
+        <div class="py-2.5 flex justify-between items-center">
+          <span>Reset Parameters to Default</span>
+          <kbd class="font-mono bg-slate-800 border border-slate-700 px-2 py-1 rounded text-emerald-400">R</kbd>
+        </div>
+        <div class="py-2.5 flex justify-between items-center">
+          <span>Copy Summary Briefing</span>
+          <kbd class="font-mono bg-slate-800 border border-slate-700 px-2 py-1 rounded text-emerald-400">C</kbd>
+        </div>
+        <div class="py-2.5 flex justify-between items-center">
+          <span>Export CSV Breakdown</span>
+          <kbd class="font-mono bg-slate-800 border border-slate-700 px-2 py-1 rounded text-emerald-400">E</kbd>
+        </div>
+        <div class="py-2.5 flex justify-between items-center">
+          <span>Cycle UI Themes</span>
+          <kbd class="font-mono bg-slate-800 border border-slate-700 px-2 py-1 rounded text-emerald-400">T</kbd>
+        </div>
+        <div class="py-2.5 flex justify-between items-center">
+          <span>Open Shortcuts Guide</span>
+          <kbd class="font-mono bg-slate-800 border border-slate-700 px-2 py-1 rounded text-emerald-400">?</kbd>
+        </div>
+        <div class="py-2.5 flex justify-between items-center">
+          <span>Close Active Modal</span>
+          <kbd class="font-mono bg-slate-800 border border-slate-700 px-2 py-1 rounded text-slate-400">Esc</kbd>
+        </div>
+      </div>
+      <button class="modal-close w-full py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-white transition-all">Close</button>
+    </div>
+  </div>
+
+  <!-- MODAL 2: JSON PRESET EXPORT & IMPORT (Rule 15) -->
+  <div id="modal-json" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between">
+        <h3 class="text-base font-bold text-white flex items-center gap-2">📂 Scenario JSON Manager</h3>
+        <button class="modal-close text-slate-400 hover:text-white p-1 text-lg font-mono">&times;</button>
+      </div>
+      <p class="text-xs text-slate-400">Copy your current simulation scenario or paste an external configuration JSON.</p>
+      <textarea id="json-io-area" rows="7" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 font-mono text-xs text-emerald-400 focus:outline-none focus:ring-1 focus:ring-emerald-500 custom-scroll" placeholder="Paste scenario JSON here..."></textarea>
+      <div class="flex gap-2">
+        <button id="btn-copy-json" class="flex-1 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-white transition-all">📋 Copy JSON</button>
+        <button id="btn-apply-json" class="flex-1 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-xs font-bold text-white transition-all">📥 Apply Scenario</button>
+      </div>
+      <button class="modal-close w-full py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-300 transition-all">Close</button>
+    </div>
+  </div>
+
+  <!-- MODAL 3: FEEDBACK & SUPPORT (Rule 14) -->
+  <div id="modal-feedback" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between">
+        <h3 class="text-base font-bold text-white flex items-center gap-2">💬 User Feedback &amp; Support</h3>
+        <button class="modal-close text-slate-400 hover:text-white p-1 text-lg font-mono">&times;</button>
+      </div>
+      <p class="text-xs text-slate-400">We appreciate your feedback to make this the world's best compound interest calculator.</p>
+      <div class="space-y-2">
+        <label class="block text-xs font-semibold text-slate-300">Satisfaction Rating</label>
+        <div class="flex gap-2 text-xl cursor-pointer" id="star-rating">
+          <span data-star="1">⭐</span><span data-star="2">⭐</span><span data-star="3">⭐</span><span data-star="4">⭐</span><span data-star="5">⭐</span>
+        </div>
+      </div>
+      <div class="space-y-1">
+        <label class="block text-xs font-semibold text-slate-300">Your Suggestion / Message</label>
+        <textarea id="inp-feedback-text" rows="3" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-200 focus:outline-none focus:ring-1 focus:ring-emerald-500" placeholder="Tell us what you'd like improved..."></textarea>
+      </div>
+      <button id="btn-submit-feedback" class="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-xs font-bold text-white transition-all">Submit Feedback</button>
+    </div>
+  </div>
+
+  <!-- MODAL 4: FINANCIAL FORMULA METHODOLOGY -->
+  <div id="modal-formula" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto custom-scroll">
+      <div class="flex items-center justify-between">
+        <h3 class="text-base font-bold text-white flex items-center gap-2">📐 Compounding Mathematics</h3>
+        <button class="modal-close text-slate-400 hover:text-white p-1 text-lg font-mono">&times;</button>
+      </div>
+      <div class="space-y-3 text-xs text-slate-300">
+        <div class="p-3 bg-slate-950 rounded-xl border border-slate-800">
+          <p class="font-bold text-emerald-400 mb-1">1. Basic Lump-Sum Compound Interest</p>
+          <p class="font-mono text-slate-200">A = P × (1 + r/n)^(n×t)</p>
+          <p class="text-[11px] text-slate-400 mt-1">Where P is initial principal, r is nominal annual rate, n is compounding periods per year, and t is time in years.</p>
+        </div>
+        <div class="p-3 bg-slate-950 rounded-xl border border-slate-800">
+          <p class="font-bold text-emerald-400 mb-1">2. Recurring Contribution (Annuity Future Value)</p>
+          <p class="font-mono text-slate-200">FV_dca = PMT × [ ((1 + i)^N - 1) / i ]</p>
+          <p class="text-[11px] text-slate-400 mt-1">Where PMT is periodic payment, i is effective periodic rate: (1 + r/n)^(n/f) - 1, and N is total payments.</p>
+        </div>
+      </div>
+      <button class="modal-close w-full py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-white transition-all">Got it</button>
+    </div>
+  </div>
+
+  <!-- APPLICATION LOGIC & I18N (Vanilla JS) -->
+  <script>
+  (function() {
+    // 20-LANGUAGE DICTIONARY (Rule 1)
+    const I18N = {
+      en: {
+        title: "Compound Calculator", sub: "Global Investment & DCA Simulator",
+        presets: "Presets:", calcMode: "Calculation Mode", recurring: "Recurring (DCA)", basic: "Basic (Lump-sum)",
+        principal: "Initial Principal", contrib: "Periodic Contribution", depositFreq: "Deposit Frequency",
+        depositTiming: "Deposit Timing", endPeriod: "End of Period", begPeriod: "Beginning of Period",
+        rate: "Estimated Annual Return", horizon: "Investment Horizon", compoundFreq: "Compound Frequency",
+        recalc: "Recalculate", reset: "Reset", futureVal: "Future Balance", totalInvested: "Total Invested",
+        totalInterest: "Total Interest", roi: "Total Return ROI", inflTitle: "Inflation Adjusted Purchasing Power",
+        chartHeading: "Growth Projection Graph", chartSub: "Annual visual trajectory of deposits vs compound interest",
+        tableHeading: "Annual Breakdown Schedule", tableSub: "Detailed year-by-year financial accounting",
+        copy: "Copy", csv: "Export CSV", share: "Share", year: "Year", starting: "Starting",
+        deposits: "Deposits", interestEarned: "Interest Earned", totalInt: "Total Interest", ending: "Ending Balance",
+        disclaimer: "For educational and illustrative purposes only. Not certified financial advice."
+      },
+      ko: {
+        title: "글로벌 복리 계산기", sub: "투자 시뮬레이터 & 적립식 DCA",
+        presets: "추천 시나리오:", calcMode: "계산 모드", recurring: "적립식 (DCA)", basic: "거치식 (원금)",
+        principal: "초기 투자 원금", contrib: "정기 적립액", depositFreq: "적립 주기",
+        depositTiming: "납입 시점", endPeriod: "기말 납입", begPeriod: "기초 납입",
+        rate: "예상 연수익률", horizon: "투자 기간", compoundFreq: "복리 주기",
+        recalc: "다시 계산", reset: "초기화", futureVal: "최종 만기 수령액", totalInvested: "총 원금 투자액",
+        totalInterest: "총 복리 이자수익", roi: "원금 대비 수익률 (ROI)", inflTitle: "물가상승률(인플레이션) 반영 실질 구매력",
+        chartHeading: "자산 성장 시각화 그래프", chartSub: "연도별 원금 납입액과 복리 이자 누적 곡선",
+        tableHeading: "연도별 세부 정산표", tableSub: "연도별 기초자산, 납입액, 발생이자 상세 내역",
+        copy: "요약 복사", csv: "CSV 다운로드", share: "공유", year: "연차", starting: "기초 자산",
+        deposits: "연간 납입액", interestEarned: "연간 발생이자", totalInt: "누적 이자", ending: "기말 평가액",
+        disclaimer: "본 시뮬레이션은 교육 및 참고용이며, 공인된 금융 조언이 아닙니다."
+      },
+      ja: {
+        title: "複利計算シミュレーター", sub: "グローバル資産形成 & 積立DCA",
+        presets: "プリセット:", calcMode: "計算モード", recurring: "積立投資 (DCA)", basic: "一括投資",
+        principal: "初期投資元本", contrib: "定期積立額", depositFreq: "積立頻度",
+        depositTiming: "積立タイミング", endPeriod: "期末積立", begPeriod: "期首積立",
+        rate: "想定年利回り", horizon: "運用期間", compoundFreq: "複利頻度",
+        recalc: "再計算", reset: "リセット", futureVal: "最終資産残高", totalInvested: "総投資元本",
+        totalInterest: "複利利息合計", roi: "運用収益率 (ROI)", inflTitle: "インフレ調整後実質購買力",
+        chartHeading: "資産推移グラフ", chartSub: "元本積立と複利成長の推移",
+        tableHeading: "年間別内訳表", tableSub: "年ごとの開始残高、積立額、運用益の詳細",
+        copy: "要約コピー", csv: "CSV出力", share: "共有", year: "年数", starting: "期首残高",
+        deposits: "年間積立額", interestEarned: "年間運用益", totalInt: "累計利益", ending: "期末残高",
+        disclaimer: "本ツールは教育目的のシミュレーションであり、投資助言ではありません。"
+      },
+      zh: {
+        title: "全球复利计算器", sub: "投资与定投模拟器",
+        presets: "预设方案:", calcMode: "计算模式", recurring: "定期定额 (DCA)", basic: "单笔本金",
+        principal: "初始本金", contrib: "定期追加金额", depositFreq: "定投频率",
+        depositTiming: "扣款时机", endPeriod: "期末扣款", begPeriod: "期初扣款",
+        rate: "年化预期收益率", horizon: "投资期限", compoundFreq: "复利频次",
+        recalc: "重新计算", reset: "重置", futureVal: "最终总金额", totalInvested: "累计投资本金",
+        totalInterest: "累计复利收益", roi: "总投资回报率 (ROI)", inflTitle: "考虑通胀后的实际购买力",
+        chartHeading: "财富增长走势图", chartSub: "历年本金投入与复利收益趋势",
+        tableHeading: "年度收益明细表", tableSub: "逐年期初金额、定投额与收益明细",
+        copy: "复制摘要", csv: "导出 CSV", share: "分享", year: "年份", starting: "期初本金",
+        deposits: "年度定投", interestEarned: "当年收益", totalInt: "累计利息", ending: "期末总值",
+        disclaimer: "仅供学习参考，不构成任何投资建议。"
+      },
+      es: {
+        title: "Calculadora de Interés Compuesto", sub: "Simulador de Inversión y DCA Global",
+        presets: "Preajustes:", calcMode: "Modo de Cálculo", recurring: "Aportación Periódica (DCA)", basic: "Pago Único (Básico)",
+        principal: "Capital Inicial", contrib: "Aportación Periódica", depositFreq: "Frecuencia de Depósito",
+        depositTiming: "Momento del Depósito", endPeriod: "Final del Periodo", begPeriod: "Inicio del Periodo",
+        rate: "Rentabilidad Anual", horizon: "Plazo de Inversión", compoundFreq: "Frecuencia de Capitalización",
+        recalc: "Recalcular", reset: "Reiniciar", futureVal: "Saldo Futuro Total", totalInvested: "Capital Invertido",
+        totalInterest: "Interés Generado", roi: "Retorno Total (ROI)", inflTitle: "Poder Adquisitivo Ajustado por Inflación",
+        chartHeading: "Gráfico de Proyección de Crecimiento", chartSub: "Trayectoria de depósitos e intereses acumulados",
+        tableHeading: "Desglose Anual Detallado", tableSub: "Contabilidad detallada año tras año",
+        copy: "Copiar Resumen", csv: "Exportar CSV", share: "Compartir", year: "Año", starting: "Saldo Inicial",
+        deposits: "Aportaciones", interestEarned: "Interés Anual", totalInt: "Interés Acumulado", ending: "Saldo Final",
+        disclaimer: "Solo con fines educativos e ilustrativos. No constituye asesoramiento financiero."
+      },
+      fr: {
+        title: "Calculateur d'Intérêts Composés", sub: "Simulateur d'Investissement & DCA",
+        presets: "Scénarios :", calcMode: "Mode de Calcul", recurring: "Versements Périodiques (DCA)", basic: "Capital Initial Seul",
+        principal: "Capital Initial", contrib: "Versement Périodique", depositFreq: "Fréquence de Versement",
+        depositTiming: "Moment du Versement", endPeriod: "Fin de Période", begPeriod: "Début de Période",
+        rate: "Rendement Annuel Estimé", horizon: "Durée de l'Investissement", compoundFreq: "Fréquence de Composition",
+        recalc: "Recalculer", reset: "Réinitialiser", futureVal: "Valeur Future Totale", totalInvested: "Capital Total Investi",
+        totalInterest: "Intérêts Cumulés", roi: "Rendement Total (ROI)", inflTitle: "Pouvoir d'Achat Corrigé de l'Inflation",
+        chartHeading: "Graphique d'Évolution du Capital", chartSub: "Trajectoire des dépôts et intérêts composés",
+        tableHeading: "Tableau d'Amortissement Annuel", tableSub: "Comptabilité financière détaillée année par année",
+        copy: "Copier Résumé", csv: "Exporter CSV", share: "Partager", year: "Année", starting: "Solde Début",
+        deposits: "Versements", interestEarned: "Intérêts de l'Année", totalInt: "Intérêts Cumulés", ending: "Solde Fin",
+        disclaimer: "À des fins éducatives uniquement. Ne constitue pas un conseil financier."
+      },
+      de: {
+        title: "Zinseszinsrechner Pro", sub: "Globaler Investment & Sparplan Simulator",
+        presets: "Szenarien:", calcMode: "Berechnungsmodus", recurring: "Sparplan (DCA)", basic: "Einmalanlage",
+        principal: "Anfangskapital", contrib: "Monatliche Sparrate", depositFreq: "Sparintervall",
+        depositTiming: "Einzahlungszeitpunkt", endPeriod: "Nachschüssig", begPeriod: "Vorschüssig",
+        rate: "Erwartete Jahresrendite", horizon: "Anlagehorizont", compoundFreq: "Zinsperiode",
+        recalc: "Berechnen", reset: "Zurücksetzen", futureVal: "Endkapital", totalInvested: "Eingezahltes Kapital",
+        totalInterest: "Zinsertrag gesamt", roi: "Gesamtrendite (ROI)", inflTitle: "Inflationsbereinigte Kaufkraft",
+        chartHeading: "Vermögensentwicklung", chartSub: "Verlauf von Einzahlungen und Zinseszins",
+        tableHeading: "Jährliche Aufschlüsselung", tableSub: "Detaillierte Übersicht für jedes Anlagejahr",
+        copy: "Zusammenfassung kopieren", csv: "CSV Export", share: "Teilen", year: "Jahr", starting: "Anfangsstand",
+        deposits: "Einzahlungen", interestEarned: "Jahreszinsen", totalInt: "Zinsen kumuliert", ending: "Endstand",
+        disclaimer: "Nur zu Informationszwecken. Keine Finanzberatung."
+      },
+      pt: {
+        title: "Calculadora de Juros Compostos", sub: "Simulador de Investimentos e Aportes",
+        presets: "Cenários:", calcMode: "Modo de Cálculo", recurring: "Aportes Recorrentes (DCA)", basic: "Valor Único",
+        principal: "Capital Inicial", contrib: "Aporte Periódico", depositFreq: "Frequência de Aporte",
+        depositTiming: "Momento do Aporte", endPeriod: "Fim do Período", begPeriod: "Início do Período",
+        rate: "Rentabilidade Anual", horizon: "Prazo em Anos", compoundFreq: "Capitalização",
+        recalc: "Recalcular", reset: "Redefinir", futureVal: "Montante Final", totalInvested: "Total Investido",
+        totalInterest: "Total em Juros", roi: "Rentabilidade Total (ROI)", inflTitle: "Poder de Compra Ajustado pela Inflação",
+        chartHeading: "Gráfico de Crescimento Patrimonial", chartSub: "Evolução dos aportes e juros compostos",
+        tableHeading: "Tabela Detalhada Ano a Ano", tableSub: "Demonstrativo anual completo",
+        copy: "Copiar Resumo", csv: "Exportar CSV", share: "Compartilhar", year: "Ano", starting: "Saldo Inicial",
+        deposits: "Aportes", interestEarned: "Juros do Ano", totalInt: "Juros Acumulados", ending: "Saldo Final",
+        disclaimer: "Apenas para fins educacionais. Não constitui recomendação de investimento."
+      },
+      ru: {
+        title: "Калькулятор сложного процента", sub: "Симулятор инвестиций и регулярных пополнений",
+        presets: "Шаблоны:", calcMode: "Режим расчета", recurring: "С пополнениями (DCA)", basic: "Разовый взнос",
+        principal: "Начальный капитал", contrib: "Регулярный взнос", depositFreq: "Частота взносов",
+        depositTiming: "Время внесения", endPeriod: "В конце периода", begPeriod: "В начале периода",
+        rate: "Годовая доходность", horizon: "Срок инвестирования", compoundFreq: "Капитализация",
+        recalc: "Рассчитать", reset: "Сброс", futureVal: "Итоговый капитал", totalInvested: "Всего инвестировано",
+        totalInterest: "Накопленные проценты", roi: "Общая доходность (ROI)", inflTitle: "С учетом инфляции",
+        chartHeading: "График роста капитала", chartSub: "Динамика взносов и сложного процента",
+        tableHeading: "Таблица по годам", tableSub: "Детальный финансовый отчет по каждому году",
+        copy: "Копировать", csv: "Скачать CSV", share: "Поделиться", year: "Год", starting: "Начало года",
+        deposits: "Пополнения", interestEarned: "Доход за год", totalInt: "Всего процентов", ending: "Конец года",
+        disclaimer: "Не является индивидуальной финансовой рекомендацией."
+      },
+      it: {
+        title: "Calcolatore Interesse Composto", sub: "Simulatore di Investimento e PAC (DCA)",
+        presets: "Scenari:", calcMode: "Modalità di Calcolo", recurring: "Piano di Accumulo (PAC)", basic: "Capitale Iniziale",
+        principal: "Capitale Iniziale", contrib: "Versamento Periodico", depositFreq: "Frequenza Versamento",
+        depositTiming: "Tempistica", endPeriod: "Fine Periodo", begPeriod: "Inizio Periodo",
+        rate: "Rendimento Annuo Stimato", horizon: "Orizzonte Temporale", compoundFreq: "Composizione",
+        recalc: "Ricalcola", reset: "Reimposta", futureVal: "Valore Futuro Totale", totalInvested: "Capitale Versato",
+        totalInterest: "Interessi Guadagnati", roi: "Rendimento Totale (ROI)", inflTitle: "Potere d'Acquisto Reale (Inflazione)",
+        chartHeading: "Grafico di Crescita", chartSub: "Traiettoria di versamenti e interessi composti",
+        tableHeading: "Tabella Annuale Dettagliata", tableSub: "Rendiconto finanziario anno per anno",
+        copy: "Copia Riepilogo", csv: "Esporta CSV", share: "Condividi", year: "Anno", starting: "Inizio Anno",
+        deposits: "Versamenti", interestEarned: "Interesse Annuo", totalInt: "Interessi Totali", ending: "Saldo Finale",
+        disclaimer: "Solo a scopo educativo e illustrativo."
+      },
+      vi: {
+        title: "Máy Tính Lãi Kép", sub: "Mô Phỏng Đầu Tư & Tích Lũy DCA",
+        presets: "Kịch bản:", calcMode: "Chế độ tính", recurring: "Tích lũy định kỳ (DCA)", basic: "Một lần (Gốc)",
+        principal: "Vốn ban đầu", contrib: "Số tiền góp định kỳ", depositFreq: "Tần suất góp",
+        depositTiming: "Thời điểm nộp", endPeriod: "Cuối kỳ", begPeriod: "Đầu kỳ",
+        rate: "Lãi suất hàng năm", horizon: "Thời gian đầu tư (Năm)", compoundFreq: "Kỳ hạn nhập gốc",
+        recalc: "Tính lại", reset: "Đặt lại", futureVal: "Giá trị tương lai", totalInvested: "Tổng vốn góp",
+        totalInterest: "Tổng tiền lãi", roi: "Lợi nhuận ròng (ROI)", inflTitle: "Sức mua sau lạm phát",
+        chartHeading: "Biểu đồ tăng trưởng tài sản", chartSub: "Xu hướng tiền gốc và lãi kép theo thời gian",
+        tableHeading: "Bảng chi tiết theo năm", tableSub: "Báo cáo chi tiết theo từng năm đầu tư",
+        copy: "Sao chép tóm tắt", csv: "Xuất CSV", share: "Chia sẻ", year: "Năm", starting: "Đầu kỳ",
+        deposits: "Tiền gửi", interestEarned: "Lãi sinh ra", totalInt: "Tổng lãi tích lũy", ending: "Số dư cuối kỳ",
+        disclaimer: "Chỉ mang tính chất minh họa và giáo dục."
+      },
+      th: {
+        title: "เครื่องคำนวณดอกเบี้ยทบต้น", sub: "แบบจำลองการลงทุนและ DCA",
+        presets: "แผนตัวอย่าง:", calcMode: "โหมดการคำนวณ", recurring: "การออมสม่ำเสมอ (DCA)", basic: "เงินก้อนเดียว",
+        principal: "เงินต้นเริ่มต้น", contrib: "เงินออมสมทบ", depositFreq: "ความถี่การออม",
+        depositTiming: "เวลาที่ออม", endPeriod: "สิ้นงวด", begPeriod: "ต้นงวด",
+        rate: "ผลตอบแทนรายปี (%)", horizon: "ระยะเวลาลงทุน (ปี)", compoundFreq: "ความถี่ทบต้น",
+        recalc: "คำนวณใหม่", reset: "รีเซ็ต", futureVal: "มูลค่าในอนาคต", totalInvested: "เงินต้นรวมทั้งหมด",
+        totalInterest: "ดอกเบี้ยรวมที่ได้รับ", roi: "อัตราผลตอบแทน (ROI)", inflTitle: "มูลค่าแท้จริงหลังหักเงินเฟ้อ",
+        chartHeading: "กราฟการเติบโตของพอร์ต", chartSub: "สัดส่วนเงินต้นและดอกเบี้ยทบต้นตามเวลา",
+        tableHeading: "ตารางแจกแจงรายปี", tableSub: "รายละเอียดการเงินแต่ละปีอย่างแม่นยำ",
+        copy: "คัดลอกสรุป", csv: "ดาวน์โหลด CSV", share: "แชร์", year: "ปีที่", starting: "ยอดต้นปี",
+        deposits: "เงินสมทบ", interestEarned: "ดอกเบี้ยปีนี้", totalInt: "ดอกเบี้ยสะสม", ending: "ยอดปลายปี",
+        disclaimer: "เพื่อการศึกษาเท่านั้น ไม่ใช่คำแนะนำทางการเงิน"
+      },
+      id: {
+        title: "Kalkulator Bunga Majemuk", sub: "Simulator Investasi & Nabung Rutin DCA",
+        presets: "Pilihan Preset:", calcMode: "Mode Perhitungan", recurring: "Rutin Berkala (DCA)", basic: "Dana Awal Tunggal",
+        principal: "Modal Awal", contrib: "Setoran Rutin", depositFreq: "Frekuensi Setoran",
+        depositTiming: "Waktu Setoran", endPeriod: "Akhir Periode", begPeriod: "Awal Periode",
+        rate: "Estimasi Imbal Hasil (%)", horizon: "Jangka Waktu (Tahun)", compoundFreq: "Frekuensi Penggabungan",
+        recalc: "Hitung Ulang", reset: "Reset", futureVal: "Total Saldo Masa Depan", totalInvested: "Total Modal Disetor",
+        totalInterest: "Total Bunga/Imbal Hasil", roi: "Total Return (ROI)", inflTitle: "Daya Beli Riil (Disesuaikan Inflasi)",
+        chartHeading: "Grafik Pertumbuhan Aset", chartSub: "Visualisasi akumulasi modal vs bunga majemuk",
+        tableHeading: "Rincian Tahunan", tableSub: "Tabel perincian keuangan dari tahun ke tahun",
+        copy: "Salin Ringkasan", csv: "Ekspor CSV", share: "Bagikan", year: "Tahun", starting: "Saldo Awal",
+        deposits: "Setoran", interestEarned: "Bunga Tahunan", totalInt: "Akumulasi Bunga", ending: "Saldo Akhir",
+        disclaimer: "Hanya untuk tujuan edukasi dan simulasi."
+      },
+      tr: {
+        title: "Bileşik Faiz Hesaplayıcı", sub: "Yatırım Simülatörü ve Düzenli Birikim DCA",
+        presets: "Hazır Senaryolar:", calcMode: "Hesaplama Modu", recurring: "Düzenli Yatırım (DCA)", basic: "Tek Seferlik Anapara",
+        principal: "Başlangıç Sermayesi", contrib: "Periyodik Katkı", depositFreq: "Yatırım Sıklığı",
+        depositTiming: "Yatırım Zamanı", endPeriod: "Dönem Sonu", begPeriod: "Dönem Başı",
+        rate: "Yıllık Getiri Oranı (%)", horizon: "Yatırım Süresi (Yıl)", compoundFreq: "Bileşik Dönemi",
+        recalc: "Hesapla", reset: "Sıfırla", futureVal: "Gelecekteki Toplam Değer", totalInvested: "Toplam Yatırılan Anapara",
+        totalInterest: "Kazanılan Toplam Faiz", roi: "Net Getiri (ROI)", inflTitle: "Enflasyona Göre Alım Gücü",
+        chartHeading: "Büyüme Grafiği", chartSub: "Yatırılan anapara ve bileşik getiri eğrisi",
+        tableHeading: "Yıllık Döküm Tablosu", tableSub: "Yıllara göre detaylı finansal döküm",
+        copy: "Özeti Kopyala", csv: "CSV İndir", share: "Paylaş", year: "Yıl", starting: "Dönem Başı",
+        deposits: "Yatırımlar", interestEarned: "Yıllık Faiz", totalInt: "Toplam Faiz", ending: "Dönem Sonu",
+        disclaimer: "Yalnızca eğitim amaçlıdır. Yatırım tavsiyesi değildir."
+      },
+      pl: {
+        title: "Kalkulator Procentu Składanego", sub: "Symulator Inwestycji i Oszczędzania DCA",
+        presets: "Scenariusze:", calcMode: "Tryb obliczeń", recurring: "Regularne wpłaty (DCA)", basic: "Wpłata jednorazowa",
+        principal: "Kapitał początkowy", contrib: "Wpłata okresowa", depositFreq: "Częstotliwość wpłat",
+        depositTiming: "Moment wpłaty", endPeriod: "Koniec okresu", begPeriod: "Początek okresu",
+        rate: "Roczna stopa zwrotu (%)", horizon: "Okres inwestycji (lata)", compoundFreq: "Kapitalizacja",
+        recalc: "Przelicz", reset: "Zresetuj", futureVal: "Wartość końcowa", totalInvested: "Wpłacony kapitał",
+        totalInterest: "Zarobione odsetki", roi: "Zwrot z inwestycji (ROI)", inflTitle: "Wartość realna po inflacji",
+        chartHeading: "Wykres wzrostu kapitału", chartSub: "Zestawienie wpłat i procentu składanego",
+        tableHeading: "Roczne zestawienie", tableSub: "Szczegółowy harmonogram rok po roku",
+        copy: "Kopiuj podsumowanie", csv: "Pobierz CSV", share: "Udostępnij", year: "Rok", starting: "Początek roku",
+        deposits: "Wpłaty", interestEarned: "Odsetki w roku", totalInt: "Suma odsetek", ending: "Koniec roku",
+        disclaimer: "Narzędzie wyłącznie edukacyjne. Nie stanowi porady finansowej."
+      },
+      nl: {
+        title: "Samengestelde Rente Calculator", sub: "Investeringssimulator & DCA Spaarplan",
+        presets: "Voorbeelden:", calcMode: "Berekeningsmodus", recurring: "Periodieke Inleg (DCA)", basic: "Eenmalige Inleg",
+        principal: "Startkapitaal", contrib: "Periodieke Inleg", depositFreq: "Inlegfrequentie",
+        depositTiming: "Tijdstip van Inleg", endPeriod: "Einde Periode", begPeriod: "Begin Periode",
+        rate: "Verwacht Jaarrendement (%)", horizon: "Looptijd in Jaren", compoundFreq: "Rentetoevoeging",
+        recalc: "Herbereken", reset: "Herstel", futureVal: "Eindkapitaal", totalInvested: "Totaal Ingelegd",
+        totalInterest: "Totaal Rente", roi: "Rendement (ROI)", inflTitle: "Koopkracht gecorrigeerd voor inflatie",
+        chartHeading: "Vermogensgroeigrafiek", chartSub: "Ontwikkeling van inleg en samengestelde rente",
+        tableHeading: "Jaarlijks Overzicht", tableSub: "Financieel schema van jaar tot jaar",
+        copy: "Kopieer Samenvatting", csv: "Exporteer CSV", share: "Delen", year: "Jaar", starting: "Startsaldo",
+        deposits: "Inleg", interestEarned: "Jaarlijkse Rente", totalInt: "Cumulatieve Rente", ending: "Eindsaldo",
+        disclaimer: "Uitsluitend voor educatieve doeleinden."
+      },
+      ar: {
+        title: "حاسبة الفائدة المركبة العالمية", sub: "محاكي الاستثمار وخطة التراكم الدوري",
+        presets: "السيناريوهات:", calcMode: "وضع الحساب", recurring: "استثمار دوري (DCA)", basic: "مبلغ مقطوع أولي",
+        principal: "رأس المال الأولي", contrib: "المساهمة الدورية", depositFreq: "تكرار الإيداع",
+        depositTiming: "توقيت الإيداع", endPeriod: "نهاية الفترة", begPeriod: "بداية الفترة",
+        rate: "العائد السنوي المتوقع (%)", horizon: "فترة الاستثمار (سنوات)", compoundFreq: "تكرار الفائدة المركبة",
+        recalc: "إعادة الحساب", reset: "إعادة ضبط", futureVal: "القيمة المستقبلية الكلية", totalInvested: "إجمالي رأس المال المستثمر",
+        totalInterest: "إجمالي الأرباح المركبة", roi: "العائد على الاستثمار (ROI)", inflTitle: "القوة الشرائية المعدلة للتضخم",
+        chartHeading: "مخطط نمو الثروة", chartSub: "تطور الودائع والأرباح المركبة عبر السنوات",
+        tableHeading: "جدول التوزيع السنوي", tableSub: "كشف حساب مالي سنوي مفصل",
+        copy: "نسخ الملخص", csv: "تصدير CSV", share: "مشاركة", year: "السنة", starting: "رصيد البداية",
+        deposits: "الودائع السنوية", interestEarned: "الفائدة السنوية", totalInt: "الفائدة التراكمية", ending: "رصيد النهاية",
+        disclaimer: "لأغراض تعليمية وإرشادية فقط. لا تعتبر استشارة مالية."
+      },
+      hi: {
+        title: "कंपाउंड इंटरेस्ट कैलकुलेटर", sub: "ग्लोबल इन्वेस्टमेंट व एसआईपी सिमुलेटर",
+        presets: "योजनाएं:", calcMode: "गणना का प्रकार", recurring: "नियमित बचत (SIP/DCA)", basic: "एकमुश्त निवेश",
+        principal: "प्रारंभिक मूलधन", contrib: "नियमित किस्त", depositFreq: "जमा करने का अंतराल",
+        depositTiming: "जमा का समय", endPeriod: "अवधि का अंत", begPeriod: "अवधि की शुरुआत",
+        rate: "अनुमानित वार्षिक रिटर्न (%)", horizon: "निवेश अवधि (वर्ष)", compoundFreq: "चक्रवृद्धि अंतराल",
+        recalc: "पुनर्गणना", reset: "रीसेट", futureVal: "कुल भविष्य मूल्य", totalInvested: "कुल निवेशित राशि",
+        totalInterest: "कुल चक्रवृद्धि ब्याज", roi: "कुल रिटर्न (ROI)", inflTitle: "मुद्रास्फीति समायोजित मूल्य",
+        chartHeading: "धन वृद्धि ग्राफ", chartSub: "मूलधन और ब्याज की वार्षिक वृद्धि",
+        tableHeading: "वार्षिक विवरण तालिका", tableSub: "साल-दर-साल वित्तीय रिपोर्ट",
+        copy: "सारांश कॉपी करें", csv: "CSV डाउनलोड", share: "शेयर करें", year: "वर्ष", starting: "प्रारंभिक राशि",
+        deposits: "वार्षिक जमा", interestEarned: "वार्षिक ब्याज", totalInt: "कुल ब्याज", ending: "अंतिम राशि",
+        disclaimer: "यह केवल शैक्षिक उद्देश्य के लिए है। यह वित्तीय सलाह नहीं है।"
+      },
+      sv: {
+        title: "Ränta-på-ränta Kalkylator", sub: "Investeringssimulator & Månadssparande",
+        presets: "Förinställningar:", calcMode: "Beräkningsläge", recurring: "Månadssparande (DCA)", basic: "Engångsinsättning",
+        principal: "Startkapital", contrib: "Regelbunden Insättning", depositFreq: "Sparfrekvens",
+        depositTiming: "Insättningstidpunkt", endPeriod: "Slutet av perioden", begPeriod: "Början av perioden",
+        rate: "Förväntad Årsavkastning (%)", horizon: "Investeringstid (År)", compoundFreq: "Sammansättningsfrekvens",
+        recalc: "Beräkna", reset: "Återställ", futureVal: "Slutgiltigt Saldo", totalInvested: "Totalt Sparat Belopp",
+        totalInterest: "Total Ränta / Avkastning", roi: "Avkastning (ROI)", inflTitle: "Inflationsjusterad Köpkraft",
+        chartHeading: "Tillväxtdiagram", chartSub: "Utveckling av sparade medel och avkastning",
+        tableHeading: "Årlig Sammanställning", tableSub: "Detaljerad ekonomisk redovisning år för år",
+        copy: "Kopiera Sammanfattning", csv: "Exportera CSV", share: "Dela", year: "År", starting: "Ingående Saldo",
+        deposits: "Insättningar", interestEarned: "Årets Avkastning", totalInt: "Ackumulerad Ränta", ending: "Utgående Saldo",
+        disclaimer: "Endast i utbildningssyfte. Utgör inte finansiell rådgivning."
+      },
+      uk: {
+        title: "Калькулятор Складних Відсотків", sub: "Симулятор Інвестицій та Регулярних Внесків",
+        presets: "Шаблони:", calcMode: "Режим розрахунку", recurring: "Регулярні внески (DCA)", basic: "Одноразовий внесок",
+        principal: "Початковий капітал", contrib: "Регулярний внесок", depositFreq: "Періодичність",
+        depositTiming: "Момент внесення", endPeriod: "Кінець періоду", begPeriod: "Початок періоду",
+        rate: "Очікувана річна дохідність (%)", horizon: "Термін інвестицій (Років)", compoundFreq: "Капіталізація",
+        recalc: "Перерахувати", reset: "Скинути", futureVal: "Підсумковий баланс", totalInvested: "Всього інвестовано",
+        totalInterest: "Зароблені відсотки", roi: "Загальний дохід (ROI)", inflTitle: "Купівельна спроможність (з інфляцією)",
+        chartHeading: "Графік зростання капіталу", chartSub: "Динаміка внесків та складного відсотка",
+        tableHeading: "Щорічний звіт", tableSub: "Детальна розбивка по роках",
+        copy: "Скопіювати підсумок", csv: "Експорт CSV", share: "Поділитися", year: "Рік", starting: "Початок року",
+        deposits: "Внески", interestEarned: "Дохід за рік", totalInt: "Накопичені відсотки", ending: "Кінець року",
+        disclaimer: "Тільки для ознайомчих цілей. Не є фінансовою порадою."
+      }
+    };
+
+    // CURRENCY DEFINITIONS
+    const CURRENCIES = {
+      USD: { symbol: '$', locale: 'en-US' },
+      EUR: { symbol: '€', locale: 'de-DE' },
+      GBP: { symbol: '£', locale: 'en-GB' },
+      JPY: { symbol: '¥', locale: 'ja-JP', decimals: 0 },
+      KRW: { symbol: '₩', locale: 'ko-KR', decimals: 0 },
+      CNY: { symbol: '¥', locale: 'zh-CN' },
+      INR: { symbol: '₹', locale: 'hi-IN' },
+      CAD: { symbol: 'C$', locale: 'en-CA' },
+      AUD: { symbol: 'A$', locale: 'en-AU' },
+      CHF: { symbol: 'Fr', locale: 'de-CH' },
+      BRL: { symbol: 'R$', locale: 'pt-BR' },
+      SEK: { symbol: 'kr', locale: 'sv-SE' },
+      TRY: { symbol: '₺', locale: 'tr-TR' }
+    };
+
+    // DEFAULT STATE
+    const DEFAULT_STATE = {
+      mode: 'recurring',
+      principal: 10000,
+      deposit: 500,
+      depositFreq: 12,
+      depositTiming: 'end',
+      rate: 8.0,
+      years: 20,
+      compoundFreq: 12,
+      currency: 'USD',
+      lang: 'en',
+      theme: 'dark',
+      chartType: 'stacked'
+    };
+
+    let state = Object.assign({}, DEFAULT_STATE);
+    let chartInstance = null;
+
+    // DOM ELEMENTS
+    const el = {
+      lang: document.getElementById('sel-lang'),
+      curr: document.getElementById('sel-curr'),
+      theme: document.getElementById('sel-theme'),
+      modeRecurring: document.getElementById('mode-recurring'),
+      modeBasic: document.getElementById('mode-basic'),
+      grpContribution: document.getElementById('grp-contribution'),
+      principal: document.getElementById('inp-principal'),
+      rngPrincipal: document.getElementById('rng-principal'),
+      valPrincipalDisplay: document.getElementById('val-principal-display'),
+      deposit: document.getElementById('inp-deposit'),
+      rngDeposit: document.getElementById('rng-deposit'),
+      valDepositDisplay: document.getElementById('val-deposit-display'),
+      depositFreq: document.getElementById('sel-deposit-freq'),
+      depositTiming: document.getElementById('sel-deposit-timing'),
+      rate: document.getElementById('inp-rate'),
+      rngRate: document.getElementById('rng-rate'),
+      valRateDisplay: document.getElementById('val-rate-display'),
+      years: document.getElementById('inp-years'),
+      rngYears: document.getElementById('rng-years'),
+      valYearsDisplay: document.getElementById('val-years-display'),
+      compoundFreq: document.getElementById('sel-compound-freq'),
+      kpiFuture: document.getElementById('kpi-future-val'),
+      kpiFutureMult: document.getElementById('kpi-future-mult'),
+      kpiPrincipal: document.getElementById('kpi-principal-val'),
+      kpiPrincipalPct: document.getElementById('kpi-principal-pct'),
+      kpiInterest: document.getElementById('kpi-interest-val'),
+      kpiInterestPct: document.getElementById('kpi-interest-pct'),
+      kpiRoi: document.getElementById('kpi-roi-val'),
+      inflAdjusted: document.getElementById('val-infl-adjusted'),
+      inflLoss: document.getElementById('val-infl-loss'),
+      tableBody: document.getElementById('table-body'),
+      btnShareLink: document.getElementById('btn-share-link'),
+      btnCopySummary: document.getElementById('btn-copy-summary'),
+      btnExportCsv: document.getElementById('btn-export-csv'),
+      btnRecalculate: document.getElementById('btn-recalculate'),
+      btnReset: document.getElementById('btn-reset'),
+      toastContainer: document.getElementById('toast-container'),
+      chartStackedBtn: document.getElementById('chart-type-stacked'),
+      chartLineBtn: document.getElementById('chart-type-line')
+    };
+
+    // FORMAT CURRENCY
+    function formatMoney(amount, forceDecimals = null) {
+      const c = CURRENCIES[state.currency] || { symbol: '$', locale: 'en-US' };
+      const dec = forceDecimals !== null ? forceDecimals : (c.decimals !== undefined ? c.decimals : (amount >= 100000 ? 0 : 2));
+      try {
+        return new Intl.NumberFormat(c.locale, {
+          style: 'currency',
+          currency: state.currency,
+          minimumFractionDigits: dec,
+          maximumFractionDigits: dec
+        }).format(amount);
+      } catch (e) {
+        return c.symbol + ' ' + Math.round(amount).toLocaleString();
+      }
+    }
+
+    // TOAST NOTIFICATION (Rule 16)
+    function showToast(msg, icon = '✅') {
+      const toast = document.createElement('div');
+      toast.className = 'pointer-events-auto flex items-center gap-2.5 px-4 py-2.5 rounded-xl bg-slate-900 border border-emerald-500/40 text-slate-100 text-xs shadow-2xl shadow-emerald-950/50 transition-all duration-300 transform translate-y-2 opacity-0 font-medium';
+      toast.innerHTML = `<span class="text-base">${icon}</span><span>${msg}</span>`;
+      el.toastContainer.appendChild(toast);
+      requestAnimationFrame(() => {
+        toast.classList.remove('translate-y-2', 'opacity-0');
+      });
+      setTimeout(() => {
+        toast.classList.add('opacity-0', 'translate-y-2');
+        setTimeout(() => toast.remove(), 300);
+      }, 2600);
+    }
+
+    // UPDATE UI TEXT BASED ON LANGUAGE (Rule 1)
+    function updateLanguage() {
+      const dict = I18N[state.lang] || I18N.en;
+      document.documentElement.lang = state.lang;
+      document.documentElement.dir = (state.lang === 'ar') ? 'rtl' : 'ltr';
+
+      const map = {
+        'txt-app-title': dict.title, 'txt-app-sub': dict.sub, 'txt-presets-label': dict.presets,
+        'txt-calc-mode': dict.calcMode, 'txt-mode-recurring': dict.recurring, 'txt-mode-basic': dict.basic,
+        'txt-initial-principal': dict.principal, 'txt-periodic-contrib': dict.contrib,
+        'txt-deposit-freq': dict.depositFreq, 'txt-deposit-timing': dict.depositTiming,
+        'txt-interest-rate': dict.rate, 'txt-investment-horizon': dict.horizon,
+        'txt-compound-freq': dict.compoundFreq, 'txt-btn-calc': dict.recalc, 'txt-btn-reset': dict.reset,
+        'txt-kpi-future': dict.futureVal, 'txt-kpi-principal': dict.totalInvested,
+        'txt-kpi-interest': dict.totalInterest, 'txt-kpi-roi': dict.roi, 'txt-infl-title': dict.inflTitle,
+        'txt-chart-heading': dict.chartHeading, 'txt-chart-sub': dict.chartSub,
+        'txt-table-heading': dict.tableHeading, 'txt-table-sub': dict.tableSub,
+        'txt-btn-copy': dict.copy, 'txt-btn-csv': dict.csv, 'txt-share-btn': dict.share,
+        'th-year': dict.year, 'th-start': dict.starting, 'th-deposit': dict.deposits,
+        'th-interest': dict.interestEarned, 'th-total-interest': dict.totalInt, 'th-end': dict.ending,
+        'txt-disclaimer': dict.disclaimer
+      };
+
+      for (const [id, text] of Object.entries(map)) {
+        const dom = document.getElementById(id);
+        if (dom) dom.textContent = text;
+      }
+      document.querySelectorAll('.curr-symbol').forEach(node => {
+        node.textContent = (CURRENCIES[state.currency] || { symbol: '$' }).symbol;
+      });
+    }
+
+    // THEME CUSTOMIZER (Rule 7)
+    function applyTheme(themeName) {
+      state.theme = themeName;
+      document.documentElement.classList.remove('dark', 'light');
+      document.body.classList.remove('theme-emerald', 'theme-navy', 'theme-gold', 'bg-slate-950', 'bg-slate-900', 'bg-slate-100');
+
+      if (themeName === 'light') {
+        document.documentElement.classList.add('light');
+        document.body.classList.add('bg-slate-100', 'text-slate-900');
+      } else {
+        document.documentElement.classList.add('dark');
+        if (themeName === 'emerald') document.body.classList.add('bg-[#051510]');
+        else if (themeName === 'navy') document.body.classList.add('bg-[#060c1a]');
+        else if (themeName === 'gold') document.body.classList.add('bg-[#120f0a]');
+        else document.body.classList.add('bg-slate-950');
+      }
+      el.theme.value = themeName;
+    }
+
+    // FINANCIAL CALCULATION ENGINE (Rule 13)
+    function calculateSchedule() {
+      const P = state.principal;
+      const PMT = (state.mode === 'recurring') ? state.deposit : 0;
+      const r = state.rate / 100.0;
+      const Y = state.years;
+      const f = (state.mode === 'recurring') ? state.depositFreq : 1;
+      const n = state.compoundFreq;
+      const timing = state.depositTiming;
+
+      // Effective rate per deposit period: (1 + r/n)^(n/f) - 1
+      const effRate = Math.pow(1 + r / n, n / f) - 1;
+
+      let currentBalance = P;
+      let totalContributions = P;
+      const schedule = [];
+
+      for (let y = 1; y <= Y; y++) {
+        const startOfYearBalance = currentBalance;
+        let yearDeposits = 0;
+        let yearInterest = 0;
+
+        for (let p = 0; p < f; p++) {
+          if (PMT > 0 && timing === 'beginning') {
+            currentBalance += PMT;
+            totalContributions += PMT;
+            yearDeposits += PMT;
+          }
+          const interestPeriod = currentBalance * effRate;
+          currentBalance += interestPeriod;
+          yearInterest += interestPeriod;
+
+          if (PMT > 0 && timing === 'end') {
+            currentBalance += PMT;
+            totalContributions += PMT;
+            yearDeposits += PMT;
+          }
+        }
+
+        const cumulativeInterest = currentBalance - totalContributions;
+
+        schedule.push({
+          year: y,
+          startBalance: startOfYearBalance,
+          deposits: yearDeposits,
+          interest: yearInterest,
+          totalPrincipal: totalContributions,
+          totalInterest: cumulativeInterest,
+          endBalance: currentBalance
+        });
+      }
+
+      return schedule;
+    }
+
+    // UPDATE DISPLAY AND RENDER RESULTS
+    function updateApp() {
+      // Sync input values to displays
+      el.valPrincipalDisplay.textContent = formatMoney(state.principal);
+      el.rngPrincipal.value = state.principal;
+      el.principal.value = state.principal;
+
+      el.valDepositDisplay.textContent = formatMoney(state.deposit) + ' / ' + el.depositFreq.options[el.depositFreq.selectedIndex].text;
+      el.rngDeposit.value = state.deposit;
+      el.deposit.value = state.deposit;
+
+      el.valRateDisplay.textContent = state.rate.toFixed(2) + '%';
+      el.rngRate.value = state.rate;
+      el.rate.value = state.rate;
+
+      el.valYearsDisplay.textContent = state.years + ' ' + (I18N[state.lang] || I18N.en).year;
+      el.rngYears.value = state.years;
+      el.years.value = state.years;
+
+      // Mode visibility
+      if (state.mode === 'basic') {
+        el.grpContribution.classList.add('opacity-40', 'pointer-events-none');
+        el.modeBasic.classList.add('bg-emerald-600', 'text-white', 'font-bold');
+        el.modeBasic.classList.remove('text-slate-400');
+        el.modeRecurring.classList.remove('bg-emerald-600', 'text-white', 'font-bold');
+        el.modeRecurring.classList.add('text-slate-400');
+      } else {
+        el.grpContribution.classList.remove('opacity-40', 'pointer-events-none');
+        el.modeRecurring.classList.add('bg-emerald-600', 'text-white', 'font-bold');
+        el.modeRecurring.classList.remove('text-slate-400');
+        el.modeBasic.classList.remove('bg-emerald-600', 'text-white', 'font-bold');
+        el.modeBasic.classList.add('text-slate-400');
+      }
+
+      // Calculate schedule
+      const schedule = calculateSchedule();
+      if (!schedule.length) return;
+
+      const finalYear = schedule[schedule.length - 1];
+      const futureVal = finalYear.endBalance;
+      const totalInv = finalYear.totalPrincipal;
+      const totalInt = finalYear.totalInterest;
+      const roi = totalInv > 0 ? ((totalInt / totalInv) * 100) : 0;
+      const mult = totalInv > 0 ? (futureVal / totalInv).toFixed(2) : '1.00';
+
+      // KPI values
+      el.kpiFuture.textContent = formatMoney(futureVal);
+      el.kpiFutureMult.textContent = mult + 'x Return';
+      el.kpiPrincipal.textContent = formatMoney(totalInv);
+      el.kpiPrincipalPct.textContent = ((totalInv / futureVal) * 100).toFixed(1) + '% of Total';
+      el.kpiInterest.textContent = formatMoney(totalInt);
+      el.kpiInterestPct.textContent = ((totalInt / futureVal) * 100).toFixed(1) + '% Growth';
+      el.kpiRoi.textContent = (roi >= 0 ? '+' : '') + roi.toFixed(1) + '%';
+
+      // Inflation calculation (2.5% default annual inflation)
+      const realVal = futureVal / Math.pow(1 + 0.025, state.years);
+      el.inflAdjusted.textContent = formatMoney(realVal);
+      const lossPct = Math.round((1 - (realVal / futureVal)) * 100);
+      el.inflLoss.textContent = '-' + lossPct + '% Purchasing Power';
+
+      // Render Breakdown Table
+      let tableHtml = '';
+      schedule.forEach((row, idx) => {
+        const isLast = idx === schedule.length - 1;
+        tableHtml += `
+          <tr class="${isLast ? 'bg-emerald-950/30 font-semibold text-emerald-400' : 'hover:bg-slate-800/40'}">
+            <td class="py-2.5 px-3 font-mono">${row.year}</td>
+            <td class="py-2.5 px-3 text-right font-mono">${formatMoney(row.startBalance)}</td>
+            <td class="py-2.5 px-3 text-right font-mono">${formatMoney(row.deposits)}</td>
+            <td class="py-2.5 px-3 text-right font-mono text-teal-300">+${formatMoney(row.interest)}</td>
+            <td class="py-2.5 px-3 text-right font-mono">${formatMoney(row.totalInterest)}</td>
+            <td class="py-2.5 px-3 text-right font-mono font-bold">${formatMoney(row.endBalance)}</td>
+          </tr>
+        `;
+      });
+      el.tableBody.innerHTML = tableHtml;
+
+      // Update Chart.js
+      renderChart(schedule);
+
+      // LocalStorage persistence (Rule 3)
+      saveToStorage();
+
+      // Sync URL hash (Rule 12)
+      syncUrlHash();
+    }
+
+    // CHART.JS RENDERING (Rule 13)
+    function renderChart(schedule) {
+      const ctx = document.getElementById('growthChart').getContext('2d');
+      const labels = schedule.map(s => 'Yr ' + s.year);
+      const principalData = schedule.map(s => Math.round(s.totalPrincipal));
+      const interestData = schedule.map(s => Math.round(s.totalInterest));
+      const isStacked = state.chartType === 'stacked';
+
+      if (chartInstance) {
+        chartInstance.destroy();
+      }
+
+      chartInstance = new Chart(ctx, {
+        type: isStacked ? 'bar' : 'line',
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: (I18N[state.lang] || I18N.en).totalInvested,
+              data: principalData,
+              backgroundColor: 'rgba(56, 189, 248, 0.7)',
+              borderColor: '#38bdf8',
+              borderWidth: 1.5,
+              stack: isStacked ? 'combined' : undefined,
+              fill: !isStacked,
+              tension: 0.3
+            },
+            {
+              label: (I18N[state.lang] || I18N.en).totalInterest,
+              data: interestData,
+              backgroundColor: 'rgba(16, 185, 129, 0.75)',
+              borderColor: '#10b981',
+              borderWidth: 1.5,
+              stack: isStacked ? 'combined' : undefined,
+              fill: !isStacked,
+              tension: 0.3
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: { duration: 350 },
+          plugins: {
+            legend: {
+              labels: {
+                color: '#cbd5e1',
+                font: { family: 'Plus Jakarta Sans', size: 11, weight: '600' },
+                boxWidth: 12
+              }
+            },
+            tooltip: {
+              backgroundColor: '#0f172a',
+              titleColor: '#f8fafc',
+              bodyColor: '#cbd5e1',
+              borderColor: '#334155',
+              borderWidth: 1,
+              callbacks: {
+                label: function(context) {
+                  return context.dataset.label + ': ' + formatMoney(context.raw);
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              stacked: isStacked,
+              grid: { color: 'rgba(51, 65, 85, 0.3)' },
+              ticks: { color: '#94a3b8', font: { size: 10 } }
+            },
+            y: {
+              stacked: isStacked,
+              grid: { color: 'rgba(51, 65, 85, 0.3)' },
+              ticks: {
+                color: '#94a3b8',
+                font: { size: 10 },
+                callback: function(val) {
+                  return formatMoney(val, 0);
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+
+    // PERSISTENCE LOCALSTORAGE (Rule 3)
+    function saveToStorage() {
+      try {
+        localStorage.setItem('compound_calc_state', JSON.stringify(state));
+      } catch (e) {}
+    }
+
+    function loadFromStorage() {
+      try {
+        const saved = localStorage.getItem('compound_calc_state');
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          state = Object.assign({}, DEFAULT_STATE, parsed);
+        }
+      } catch (e) {}
+    }
+
+    // URL HASH SYNC (Rule 12)
+    function syncUrlHash() {
+      const params = new URLSearchParams();
+      params.set('m', state.mode);
+      params.set('p', state.principal);
+      params.set('d', state.deposit);
+      params.set('df', state.depositFreq);
+      params.set('dt', state.depositTiming);
+      params.set('r', state.rate);
+      params.set('y', state.years);
+      params.set('cf', state.compoundFreq);
+      params.set('curr', state.currency);
+      params.set('lang', state.lang);
+      window.history.replaceState(null, '', '#' + params.toString());
+    }
+
+    function parseUrlHash() {
+      if (!window.location.hash || window.location.hash.length < 2) return false;
+      try {
+        const hash = window.location.hash.substring(1);
+        const params = new URLSearchParams(hash);
+        if (params.has('m')) state.mode = params.get('m');
+        if (params.has('p')) state.principal = parseFloat(params.get('p')) || state.principal;
+        if (params.has('d')) state.deposit = parseFloat(params.get('d')) || state.deposit;
+        if (params.has('df')) state.depositFreq = parseInt(params.get('df')) || state.depositFreq;
+        if (params.has('dt')) state.depositTiming = params.get('dt');
+        if (params.has('r')) state.rate = parseFloat(params.get('r')) || state.rate;
+        if (params.has('y')) state.years = parseInt(params.get('y')) || state.years;
+        if (params.has('cf')) state.compoundFreq = parseInt(params.get('cf')) || state.compoundFreq;
+        if (params.has('curr')) state.currency = params.get('curr');
+        if (params.has('lang')) state.lang = params.get('lang');
+        return true;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    // EXPORT CSV (Rule 4)
+    function exportCsv() {
+      const schedule = calculateSchedule();
+      const dict = I18N[state.lang] || I18N.en;
+      let csv = '\uFEFF'; // UTF-8 BOM
+      csv += `"${dict.year}","${dict.starting}","${dict.deposits}","${dict.interestEarned}","${dict.totalInt}","${dict.ending}"\n`;
+
+      schedule.forEach(r => {
+        csv += `"${r.year}","${r.startBalance.toFixed(2)}","${r.deposits.toFixed(2)}","${r.interest.toFixed(2)}","${r.totalInterest.toFixed(2)}","${r.endBalance.toFixed(2)}"\n`;
+      });
+
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.setAttribute('href', url);
+      link.setAttribute('download', `compound-interest-schedule-${state.years}y.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      showToast('CSV schedule exported successfully!', '📥');
+    }
+
+    // COPY SUMMARY (Rule 4)
+    function copySummary() {
+      const schedule = calculateSchedule();
+      const finalRow = schedule[schedule.length - 1];
+      const text = [
+        '📊 Global Compound Interest Simulation Summary',
+        '--------------------------------------------',
+        `Mode: ${state.mode === 'recurring' ? 'Recurring (DCA)' : 'Basic (Lump-sum)'}`,
+        `Initial Principal: ${formatMoney(state.principal)}`,
+        state.mode === 'recurring' ? `Periodic Deposit: ${formatMoney(state.deposit)}` : null,
+        `Estimated Annual Return: ${state.rate.toFixed(2)}%`,
+        `Investment Horizon: ${state.years} Years`,
+        '--------------------------------------------',
+        `💰 Total Future Value: ${formatMoney(finalRow.endBalance)}`,
+        `💵 Total Invested Principal: ${formatMoney(finalRow.totalPrincipal)}`,
+        `✨ Total Compound Interest: ${formatMoney(finalRow.totalInterest)} (+${((finalRow.totalInterest / finalRow.totalPrincipal) * 100).toFixed(1)}% ROI)`,
+        '--------------------------------------------',
+        `Link: ${window.location.href}`
+      ].filter(Boolean).join('\n');
+
+      navigator.clipboard.writeText(text).then(() => {
+        showToast('Summary copied to clipboard!', '📋');
+      }).catch(() => {
+        showToast('Clipboard access unavailable', '⚠️');
+      });
+    }
+
+    // PRESET BUTTONS (Rule 15)
+    const PRESETS = {
+      sp500: { mode: 'recurring', principal: 5000, deposit: 500, depositFreq: 12, rate: 10.0, years: 25 },
+      retirement: { mode: 'recurring', principal: 25000, deposit: 800, depositFreq: 12, rate: 8.0, years: 30 },
+      college: { mode: 'recurring', principal: 2000, deposit: 250, depositFreq: 12, rate: 7.0, years: 18 },
+      hysa: { mode: 'recurring', principal: 10000, deposit: 300, depositFreq: 12, rate: 4.5, years: 5, compoundFreq: 365 },
+      lumpsum: { mode: 'basic', principal: 50000, deposit: 0, rate: 9.0, years: 20, compoundFreq: 1 }
+    };
+
+    function applyPreset(key) {
+      const p = PRESETS[key];
+      if (!p) return;
+      Object.assign(state, p);
+      updateApp();
+      showToast(`Preset "${key.toUpperCase()}" loaded!`, '🚀');
+    }
+
+    // EVENT LISTENERS
+    function initListeners() {
+      // Language
+      el.lang.addEventListener('change', (e) => {
+        state.lang = e.target.value;
+        updateLanguage();
+        updateApp();
+        showToast(`Language updated: ${e.target.options[e.target.selectedIndex].text}`, '🌐');
+      });
+
+      // Currency
+      el.curr.addEventListener('change', (e) => {
+        state.currency = e.target.value;
+        updateLanguage();
+        updateApp();
+        showToast(`Currency changed to ${state.currency}`, '💱');
+      });
+
+      // Theme
+      el.theme.addEventListener('change', (e) => {
+        applyTheme(e.target.value);
+        showToast(`Theme changed to ${e.target.options[e.target.selectedIndex].text}`, '🎨');
+      });
+
+      // Mode Toggles
+      el.modeRecurring.addEventListener('click', () => {
+        state.mode = 'recurring';
+        updateApp();
+      });
+      el.modeBasic.addEventListener('click', () => {
+        state.mode = 'basic';
+        updateApp();
+      });
+
+      // Live Input & Range bindings
+      function bindDual(inp, rng, key, isFloat = false) {
+        inp.addEventListener('input', () => {
+          const val = isFloat ? parseFloat(inp.value) : parseInt(inp.value);
+          if (!isNaN(val)) {
+            state[key] = Math.max(0, val);
+            updateApp();
+          }
+        });
+        rng.addEventListener('input', () => {
+          const val = isFloat ? parseFloat(rng.value) : parseInt(rng.value);
+          state[key] = val;
+          inp.value = val;
+          updateApp();
+        });
+      }
+
+      bindDual(el.principal, el.rngPrincipal, 'principal');
+      bindDual(el.deposit, el.rngDeposit, 'deposit');
+      bindDual(el.rate, el.rngRate, 'rate', true);
+      bindDual(el.years, el.rngYears, 'years');
+
+      // Dropdown changes
+      el.depositFreq.addEventListener('change', (e) => {
+        state.depositFreq = parseInt(e.target.value);
+        updateApp();
+      });
+      el.depositTiming.addEventListener('change', (e) => {
+        state.depositTiming = e.target.value;
+        updateApp();
+      });
+      el.compoundFreq.addEventListener('change', (e) => {
+        state.compoundFreq = parseInt(e.target.value);
+        updateApp();
+      });
+
+      // Chart Type Switcher
+      el.chartStackedBtn.addEventListener('click', () => {
+        state.chartType = 'stacked';
+        el.chartStackedBtn.className = 'px-2.5 py-1 rounded font-medium bg-emerald-600 text-white text-[11px] transition-all';
+        el.chartLineBtn.className = 'px-2.5 py-1 rounded font-medium text-slate-400 hover:text-white text-[11px] transition-all';
+        updateApp();
+      });
+      el.chartLineBtn.addEventListener('click', () => {
+        state.chartType = 'line';
+        el.chartLineBtn.className = 'px-2.5 py-1 rounded font-medium bg-emerald-600 text-white text-[11px] transition-all';
+        el.chartStackedBtn.className = 'px-2.5 py-1 rounded font-medium text-slate-400 hover:text-white text-[11px] transition-all';
+        updateApp();
+      });
+
+      // Preset pills
+      document.querySelectorAll('.preset-pill').forEach(btn => {
+        btn.addEventListener('click', () => {
+          applyPreset(btn.dataset.preset);
+        });
+      });
+
+      // Quick adjustment buttons
+      document.querySelectorAll('.add-val-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const target = document.getElementById(btn.dataset.target);
+          const add = parseInt(btn.dataset.add);
+          if (target && !isNaN(add)) {
+            target.value = (parseInt(target.value) || 0) + add;
+            target.dispatchEvent(new Event('input'));
+          }
+        });
+      });
+
+      document.querySelectorAll('.set-rate-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          state.rate = parseFloat(btn.dataset.rate);
+          updateApp();
+        });
+      });
+
+      document.querySelectorAll('.set-years-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          state.years = parseInt(btn.dataset.years);
+          updateApp();
+        });
+      });
+
+      // Action Buttons
+      el.btnRecalculate.addEventListener('click', () => {
+        updateApp();
+        showToast('Calculation updated!', '⚡');
+      });
+
+      el.btnReset.addEventListener('click', () => {
+        state = Object.assign({}, DEFAULT_STATE);
+        updateApp();
+        showToast('Reset to default scenario', '↺');
+      });
+
+      el.btnShareLink.addEventListener('click', () => {
+        syncUrlHash();
+        navigator.clipboard.writeText(window.location.href).then(() => {
+          showToast('Shareable link copied to clipboard!', '🔗');
+        }).catch(() => {
+          showToast('Could not copy link', '⚠️');
+        });
+      });
+
+      el.btnCopySummary.addEventListener('click', copySummary);
+      el.btnExportCsv.addEventListener('click', exportCsv);
+
+      // KEYBOARD SHORTCUTS (Rule 8)
+      window.addEventListener('keydown', (e) => {
+        if (['input', 'textarea'].includes(document.activeElement.tagName.toLowerCase())) {
+          if (e.key === 'Enter') {
+            document.activeElement.blur();
+            updateApp();
+            showToast('Recalculated!', '⚡');
+          }
+          return;
+        }
+
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          updateApp();
+          showToast('Recalculated!', '⚡');
+        } else if (e.key === 'r' || e.key === 'R') {
+          e.preventDefault();
+          state = Object.assign({}, DEFAULT_STATE);
+          updateApp();
+          showToast('Parameters reset!', '↺');
+        } else if (e.key === 'c' || e.key === 'C') {
+          e.preventDefault();
+          copySummary();
+        } else if (e.key === 'e' || e.key === 'E') {
+          e.preventDefault();
+          exportCsv();
+        } else if (e.key === 't' || e.key === 'T') {
+          e.preventDefault();
+          const themes = ['dark', 'emerald', 'navy', 'gold', 'light'];
+          const next = themes[(themes.indexOf(state.theme) + 1) % themes.length];
+          applyTheme(next);
+          showToast(`Theme: ${next}`, '🎨');
+        } else if (e.key === '?') {
+          e.preventDefault();
+          document.getElementById('modal-shortcuts').classList.remove('hidden');
+        } else if (e.key === 'Escape') {
+          document.querySelectorAll('.fixed.inset-0').forEach(m => m.classList.add('hidden'));
+        }
+      });
+
+      // MODALS
+      function setupModal(triggerId, modalId) {
+        const trigger = document.getElementById(triggerId);
+        const modal = document.getElementById(modalId);
+        if (trigger && modal) {
+          trigger.addEventListener('click', () => modal.classList.remove('hidden'));
+          modal.querySelectorAll('.modal-close').forEach(btn => {
+            btn.addEventListener('click', () => modal.classList.add('hidden'));
+          });
+          modal.addEventListener('click', (e) => {
+            if (e.target === modal) modal.classList.add('hidden');
+          });
+        }
+      }
+
+      setupModal('btn-open-shortcuts', 'modal-shortcuts');
+      setupModal('btn-footer-shortcuts', 'modal-shortcuts');
+      setupModal('btn-open-json-modal', 'modal-json');
+      setupModal('btn-open-feedback', 'modal-feedback');
+      setupModal('btn-open-formula', 'modal-formula');
+
+      // JSON Export / Import
+      const jsonArea = document.getElementById('json-io-area');
+      document.getElementById('btn-open-json-modal').addEventListener('click', () => {
+        jsonArea.value = JSON.stringify(state, null, 2);
+      });
+
+      document.getElementById('btn-copy-json').addEventListener('click', () => {
+        navigator.clipboard.writeText(jsonArea.value).then(() => {
+          showToast('Scenario JSON copied!', '📋');
+        });
+      });
+
+      document.getElementById('btn-apply-json').addEventListener('click', () => {
+        try {
+          const parsed = JSON.parse(jsonArea.value);
+          state = Object.assign({}, DEFAULT_STATE, parsed);
+          updateApp();
+          document.getElementById('modal-json').classList.add('hidden');
+          showToast('Custom scenario applied!', '✅');
+        } catch (e) {
+          showToast('Invalid JSON format', '❌');
+        }
+      });
+
+      // Feedback submission
+      document.getElementById('btn-submit-feedback').addEventListener('click', () => {
+        const text = document.getElementById('inp-feedback-text').value;
+        if (text.trim().length > 0) {
+          showToast('Thank you for your feedback!', '💖');
+          document.getElementById('inp-feedback-text').value = '';
+          document.getElementById('modal-feedback').classList.add('hidden');
+        } else {
+          showToast('Please enter your feedback', '⚠️');
+        }
+      });
+
+      // Star rating in feedback
+      document.querySelectorAll('#star-rating span').forEach((star) => {
+        star.addEventListener('click', () => {
+          const count = parseInt(star.dataset.star);
+          showToast(`Rated ${count} / 5 stars`, '⭐');
+        });
+      });
+    }
+
+    // PWA SERVICE WORKER REGISTRATION (Rule 10)
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/public/sw.js').catch(() => {});
+      });
+    }
+
+    // INITIALIZATION
+    function init() {
+      loadFromStorage();
+      parseUrlHash();
+
+      el.lang.value = state.lang;
+      el.curr.value = state.currency;
+      el.depositFreq.value = state.depositFreq;
+      el.depositTiming.value = state.depositTiming;
+      el.compoundFreq.value = state.compoundFreq;
+
+      applyTheme(state.theme);
+      updateLanguage();
+      initListeners();
+      updateApp();
+    }
+
+    init();
+  })();
+  </script>
+</body>
+</html>

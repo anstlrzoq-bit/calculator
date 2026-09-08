@@ -1,0 +1,6 @@
+{
+  "name": "Global Compound Interest Calculator & Investment Simulator",
+  "description": "An advanced compound interest calculator and investment simulator featuring lump-sum and recurring DCA modes, 20 languages, dynamic charts, and detailed financial breakdowns.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,17 @@
+{
+  "name": "Global Compound Interest Calculator & Investment Simulator",
+  "short_name": "CompoundCalc",
+  "description": "Professional compound interest calculator and investment simulator featuring lump-sum and recurring DCA modes, 20 languages, and interactive charts.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "icons": [
+    {
+      "src": "/public/icon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
